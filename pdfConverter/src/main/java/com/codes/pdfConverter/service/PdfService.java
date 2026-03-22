@@ -56,7 +56,8 @@ public class PdfService implements ServiceInterface {
                     new PDRectangle(bufferedImage.getWidth(), bufferedImage.getHeight())
             );
             document.addPage(page);
-            PDImageXObject xobject = LosslessFactory.createFromImage(document, bufferedImage);
+            // PDImageXObject xobject = LosslessFactory.createFromImage(document, bufferedImage);
+            PDImageXObject xobject = org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory.createFromImage(document, bufferedImage, 0.75f
 
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
             contentStream.drawImage(xobject, 0, 0);
