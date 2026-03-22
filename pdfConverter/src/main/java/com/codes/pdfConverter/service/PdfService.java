@@ -52,20 +52,22 @@ public class PdfService implements ServiceInterface {
         PDDocument document = new PDDocument();
 //        Read image
 
+        // Replace your loop body with this for better memory management
         for (MultipartFile imageStream : image) {
             BufferedImage bufferedImage = ImageIO.read(imageStream.getInputStream());
-//        Create PDF image as the size of image
-            PDPage page = new PDPage(
-                    new PDRectangle(bufferedImage.getWidth(), bufferedImage.getHeight())
-            );
+            if (bufferedImage == null) continue; 
+        
+            PDPage page = new PDPage(new PDRectangle(bufferedImage.getWidth(), bufferedImage.getHeight()));
             document.addPage(page);
-            // PDImageXObject xobject = LosslessFactory.createFromImage(document, bufferedImage);
+        
             PDImageXObject xobject = JPEGFactory.createFromImage(document, bufferedImage, 0.75f);
-
-            PDPageContentStream contentStream = new PDPageContentStream(document, page);
-            contentStream.drawImage(xobject, 0, 0);
-            contentStream.close();
+        
+            // This auto-closes the contentStream
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                contentStream.drawImage(xobject, 0, 0);
+            }
         }
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         document.save(baos);
         document.close();
