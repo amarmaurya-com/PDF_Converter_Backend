@@ -1,10 +1,17 @@
 # Build stage
-FROM maven:3.8.5-openjdk-17 AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+WORKDIR /app
 COPY . .
-RUN mvn clean package -DskipTests
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
 # Run stage
-FROM openjdk:17-jdk-slim
-COPY --from=build /target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
+
+# IMPORTANT: Install libraries needed for PDF rendering/fonts
+RUN apt-get update && apt-get install -y libfreetype6 libfontconfig1 && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /app/target/*.jar app.jar
+
+# Bind to Render's dynamic port
+ENTRYPOINT ["java", "-Dserver.port=${PORT:8080}", "-jar", "app.jar"]
