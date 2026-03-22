@@ -14,4 +14,4 @@ RUN apt-get update && apt-get install -y libfreetype6 libfontconfig1 libxrender1
 COPY --from=build /app/target/*.jar app.jar
 
 # Bind to Render's dynamic port
-ENTRYPOINT ["java", "-Dserver.port=${PORT:8080}", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xmx300m", "-Xss512k", "-Djava.awt.headless=true", "-Dserver.port=${PORT:8080}", "-jar", "app.jar"]
