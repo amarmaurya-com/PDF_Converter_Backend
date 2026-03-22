@@ -23,6 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -57,7 +60,7 @@ public class PdfService implements ServiceInterface {
             );
             document.addPage(page);
             // PDImageXObject xobject = LosslessFactory.createFromImage(document, bufferedImage);
-            PDImageXObject xobject = org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory.createFromImage(document, bufferedImage, 0.75f
+            PDImageXObject xobject = JPEGFactory.createFromImage(document, bufferedImage, 0.75f);
 
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
             contentStream.drawImage(xobject, 0, 0);
