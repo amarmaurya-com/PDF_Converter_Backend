@@ -9,7 +9,7 @@ FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
 # IMPORTANT: Install libraries needed for PDF rendering/fonts
-RUN apt-get update && apt-get install -y libfreetype6 libfontconfig1 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libfreetype6 libfontconfig1 libxrender1 libxtst6 libxi6 && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/target/*.jar app.jar
 
